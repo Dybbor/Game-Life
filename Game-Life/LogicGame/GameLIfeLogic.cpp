@@ -104,9 +104,9 @@ void GameLifeLogic::CreateData()
 			ofstr << "0000000000" << std::endl;
 			ofstr << "0000000000" << std::endl;
 			ofstr << "0000000000" << std::endl;
-			ofstr << "0000000000" << std::endl;
-			ofstr << "0000000000" << std::endl;
-			ofstr << "0000000000" << std::endl;
+			ofstr << "0000100000" << std::endl;
+			ofstr << "0001110000" << std::endl;
+			ofstr << "0000100000" << std::endl;
 			ofstr << "0000000000" << std::endl;
 			ofstr << "0000000000" << std::endl;
 			ofstr << "0000000000" << std::endl;
@@ -197,7 +197,7 @@ void GameLifeLogic::PrintData()
 			if (mas[i][j] == true)
 				std::cout << "@" << " ";
 			else 
-				std::cout << " " << " ";
+				std::cout << "0" << " ";
 		}
 		std::cout << std::endl;
 	}
@@ -263,3 +263,16 @@ void GameLifeLogic::CheckRule(int i, int j,const GameLifeLogic gl)
 		mas[i][j] = false;
 	}
 }
+
+int GameLifeLogic::GetCount()
+{
+	return size_field;
+}
+
+bool GameLifeLogic::GetValue(int i, int j)
+{
+	return mas[i][j];
+}
+
+
+
