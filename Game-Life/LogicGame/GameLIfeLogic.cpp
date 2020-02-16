@@ -16,6 +16,22 @@ GameLifeLogic::GameLifeLogic(int _size_field)
 		}
 	}
 }
+GameLifeLogic::GameLifeLogic(const GameLifeLogic & gl)
+{
+	size_field = gl.size_field;
+	mas = new bool*[size_field];
+	for (int i = 0; i < size_field; ++i)
+	{
+		mas[i] = new bool[size_field];
+	}
+	for (int i = 0; i < size_field; ++i)
+	{
+		for (int j = 0; j < size_field; j++)
+		{
+			mas[i][j] = gl.mas[i][j];
+		}
+	}
+}
 GameLifeLogic::~GameLifeLogic() 
 {
 	for (int i = 0; i < size_field; ++i)
@@ -23,6 +39,31 @@ GameLifeLogic::~GameLifeLogic()
 		delete[] mas[i];
 	}
 	delete[] mas;
+}
+
+void GameLifeLogic::operator=(const GameLifeLogic gl)
+{
+	if (gl.size_field != size_field)
+	{
+		for (int i = 0; i < size_field; ++i)
+		{
+			delete[] mas[i];
+		}
+		delete[] mas;
+		size_field = gl.size_field;
+		mas = new bool*[size_field];
+		for (int i = 0; i < size_field; ++i)
+		{
+			mas[i] = new bool[size_field];
+		}
+	}
+	for (int i = 0; i < size_field; ++i)
+	{
+		for (int j = 0; j < size_field; j++)
+		{
+			mas[i][j] = gl.mas[i][j];
+		}
+	}
 }
 
 bool GameLifeLogic::CheckFile()
@@ -135,6 +176,7 @@ void GameLifeLogic::ReadData()
 			if (line.size() != size_field - 2)
 			{
 				ResizeMas(ReturnBigger());
+				ClearData();
 			}
 			SetLine(line, i);
 			++i;
@@ -155,8 +197,69 @@ void GameLifeLogic::PrintData()
 			if (mas[i][j] == true)
 				std::cout << "@" << " ";
 			else 
-				std::cout << "0" << " ";
+				std::cout << " " << " ";
 		}
 		std::cout << std::endl;
+	}
+}
+
+void GameLifeLogic::ClearData()
+{
+	for (int i = 0; i<size_field; ++i)
+	{
+		for (int j = 0; j < size_field; j++)
+		{
+			mas[i][j] = 0;
+		}
+	}
+}
+void GameLifeLogic::Start() 
+{
+	system("cls");
+	PrintData();
+	Sleep(1000);
+	while (1) 
+	{
+
+		GameLifeLogic gl(*this);
+		for (int i = 1; i < size_field - 1; ++i)
+		{
+			for (int j = 1; j < size_field - 1; j++) 
+			{
+				CheckRule(i, j, gl);
+			}
+		}
+		system("cls");
+		PrintData();
+		Sleep(500);
+	}
+}
+void GameLifeLogic::CheckRule(int i, int j,const GameLifeLogic gl)
+{
+	
+	int count_life = 0;
+	for (int k = -1; k <= 1; ++k)
+	{
+		for (int l = -1; l <= 1; ++l)
+		{
+			if (gl.mas[i + k][j + l] == true)
+			{
+				++count_life;
+			}
+		}
+	}
+	if (gl.mas[i][j] == true)
+		count_life--;
+	if (count_life == 3 && gl.mas[i][j] == false)
+	{
+		mas[i][j] = true;
+	}
+	else if ((count_life == 2 || count_life == 3) && gl.mas[i][j] == 1)
+	{
+		mas[i][j] = true;
+	}
+	else 
+	{
+		mas[i][j] = false;
 	}
 }
